@@ -1,1 +1,1 @@
-web: gunicorn infinitycapita.wsgi --log-file -
+gunicorn infinitycapita.wsgi:application
