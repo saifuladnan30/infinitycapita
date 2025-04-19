@@ -1,0 +1,1 @@
+web: gunicorn infinitycapita.wsgi --log-file -

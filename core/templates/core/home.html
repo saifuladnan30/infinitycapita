@@ -1,0 +1,157 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">Welcome to Infinity Capita</h1>
+        <p class="lead text-muted">Empowering Collective Investment for a Brighter Financial Future</p>
+    </div>
+
+    <!-- Live Investment Summary -->
+    <div class="row text-center mb-5">
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Total Fund</h5>
+                    <h3 class="text-success">৳{{ total_fund }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📈 Total Income</h5>
+                    <h3 class="text-primary">৳{{ total_income }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📉 Total Expense</h5>
+                    <h3 class="text-danger">৳{{ total_expense }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown to Next Opportunity Deadline -->
+    {% if next_opportunity %}
+    <div class="text-center mb-5">
+        <h4 class="text-warning fw-bold">⏳ Next Opportunity Deadline: {{ next_opportunity.title }}</h4>
+        <p class="lead">Deadline: {{ next_opportunity.deadline }}</p>
+        <div id="countdown" class="fs-3 fw-semibold"></div>
+    </div>
+    {% endif %}
+
+    <!-- About Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <img src="{% static 'core/images/invest.png' %}" class="img-fluid investment" alt="Investment">
+        </div>
+        <div class="col-md-6">
+            <h2 class="fw-bold">What is Infinity Capita?</h2>
+            <p>
+                Infinity Capita is a community-based investment fund where members contribute monthly,
+                and the collective fund is invested in high-potential opportunities. Members earn profit
+                based on their investment share.
+            </p>
+            <ul>
+                <li>Minimum Monthly Contribution: ৳500</li>
+                <li>Transparent Profit Distribution</li>
+                <li>No Loans, Pure Investment</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Testimonials Carousel -->
+    <div class="mb-5">
+        <h3 class="text-center fw-bold mb-4">💬 What Our Members Say</h3>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for testimonial in testimonials %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="d-flex justify-content-center">
+                        <div class="card p-4 shadow" style="max-width: 600px;">
+                            <p class="mb-2 text-muted">"{{ testimonial.message }}"</p>
+                            <h6 class="text-end mb-0">— {{ testimonial.user.get_full_name }}</h6>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Fund Growth Chart -->
+    <div class="mb-5">
+        <h3 class="text-center fw-bold mb-4">📊 Fund Growth Overview</h3>
+        <canvas id="fundChart" height="100"></canvas>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-5">
+        <h3 class="fw-bold">Ready to grow your wealth together?</h3>
+        <p class="lead">Join Infinity Capita and take control of your financial journey.</p>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Get Started</a>
+    </div>
+</div>
+
+<!-- Countdown JS -->
+<script>
+    const deadline = new Date("{{ next_opportunity.deadline|date:'Y-m-d' }}T00:00:00");
+    const countdown = document.getElementById("countdown");
+    const interval = setInterval(() => {
+        const now = new Date();
+        const diff = deadline - now;
+        if (diff <= 0) {
+            countdown.innerHTML = "✅ Deadline reached!";
+            clearInterval(interval);
+            return;
+        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        countdown.innerHTML = `${days}d ${hours}h remaining`;
+    }, 1000);
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('fundChart').getContext('2d');
+    const fundChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_data.dates|safe }},
+            datasets: [{
+                label: 'Fund Value (৳)',
+                data: {{ chart_data.values|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: '#007bff',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => `৳${value}`
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

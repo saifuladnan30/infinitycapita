@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        {% comment %} <img src="{% static 'images/infinitycapitalogo.png' %}" alt="Infinity Capita Logo" height="80"> {% endcomment %}
+        <h2 class="mt-2">Dashboard</h2>
+        <p class="text-muted">Your financial overview</p>
+        <div class="alert alert-info text-center mt-4 shadow-sm">
+            <h5 class="mb-0">Total Fund of Infinity Capita: <strong>৳{{ total_firm_fund }}</strong></h5>
+        </div>
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Your Total Fund</h5>
+                    <p class="card-text display-6">৳{{ finance.total_fund }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Income</h5>
+                    <p class="card-text display-6">৳{{ finance.total_income }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Expense</h5>
+                    <p class="card-text display-6">৳{{ finance.total_expense }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-dark mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Net Profit</h5>
+                    <p class="card-text display-6">৳{{ finance.net_profit }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        {% if request.user.is_staff %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="get" class="form-inline mb-">
+                            <label for="user_id" class="mr-2"><strong>Select Member:</strong></label>
+                            <select name="user_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Select User --</option>
+                                {% for user in users %}
+                                    <option value="{{ user.id }}" {% if user.id|stringformat:"s" == selected_user_id %}selected{% endif %}>
+                                        {{ user.username }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+
+                        <form method="post" class="form-inline mt-4">
+                            {% csrf_token %}
+                            {{ form.amount.label_tag }} {{ form.amount }}
+                            <button type="submit" class="btn btn-success ml-2 mt-3">Add Fund</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="text-right mt-4">
+        <a href="{% url 'download_report' %}" class="btn btn-outline-secondary">Download PDF Report</a>
+    </div>
+
+    <hr class="my-5">
+
+    <h4 class="mb-3">Monthly Breakdown</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th>Month</th>
+                    <th>Income</th>
+                    <th>Expense</th>
+                    <th>Net</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in breakdowns %}
+                <tr>
+                    <td>{{ b.month|date:"F Y" }}</td>
+                    <td>৳{{ b.income }}</td>
+                    <td>৳{{ b.expense }}</td>
+                    <td>৳{{ b.net }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No data available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

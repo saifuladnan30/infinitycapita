@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fund Summary Report</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        h1 { color: #0d6efd; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        .logo { width: 150px; }
+        footer { text-align: center; font-size: 0.9rem; margin-top: 40px; color: #666; }
+    </style>
+</head>
+<body>
+    <img src="{{ logo_url }}" class="logo" alt="Logo">
+    <h1>Fund Summary Report</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Total Fund</th>
+                <th>Total Income</th>
+                <th>Total Expense</th>
+                <th>Net Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for finance in finances %}
+            <tr>
+                <td>{{ finance.user.username }}</td>
+                <td>৳{{ finance.total_fund }}</td>
+                <td>৳{{ finance.total_income }}</td>
+                <td>৳{{ finance.total_expense }}</td>
+                <td>৳{{ finance.net_profit }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <footer>
+        Infinity Capita &copy; {{ now.year }} | Report generated on {{ now|date:"F j, Y, g:i a" }}
+    </footer>
+</body>
+</html>

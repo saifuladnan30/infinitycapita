@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center align-items-center" style="max-width: 500px;">
+    <div class="card shadow p-4 text-center">
+        <img src="{% static 'core/images/infinitycapitalogo.png' %}" alt="Infinity Capita Logo" style="width: 250px;" class="mb-3 ">
+        {% comment %} <h3 class="mb-1">Infinity Capita</h3> {% endcomment %}
+        {% comment %} <p class="text-muted mb-4" style="font-size: 14px;">Invest Together, Grow Forever</p> {% endcomment %}
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="mb-3 text-start">
+                <label for="id_username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="id_username" required>
+            </div>
+            <div class="mb-3 text-start">
+                <label for="id_password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="id_password" required>
+            </div>
+            {% if form.errors %}
+                <div class="alert alert-danger mt-2 text-start">
+                    Invalid username or password.
+                </div>
+            {% endif %}
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-dark">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

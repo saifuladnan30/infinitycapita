@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .header, .footer { text-align: center; }
+        .footer { position: fixed; bottom: 0; width: 100%; font-size: 12px; }
+        .logo { width: 150px; margin-bottom: 20px; }
+        .summary-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .summary-table th, .summary-table td { border: 1px solid #ccc; padding: 8px; }
+        .summary-table th { background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ logo_path }}" alt="Logo" class="logo">
+        <h2>Member Fund Report</h2>
+    </div>
+
+    <table class="summary-table">
+        <tr>
+            <th>Username</th>
+            <th>Total Fund</th>
+            <th>Total Income</th>
+            <th>Total Expense</th>
+            <th>Net Profit</th>
+        </tr>
+        {% for finance in finances %}
+        <tr>
+            <td>{{ finance.user.username }}</td>
+            <td>৳{{ finance.total_fund }}</td>
+            <td>৳{{ finance.total_income }}</td>
+            <td>৳{{ finance.total_expense }}</td>
+            <td>৳{{ finance.net_profit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="footer">
+        Generated on {{ now }} | Infinity Capita © {{ now|date:"Y" }}
+    </div>
+</body>
+</html>

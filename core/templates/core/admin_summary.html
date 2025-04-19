@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center text-primary fw-bold mb-5">Admin Panel: Member Fund Summary</h2>
+
+    <!-- Search bar -->
+    <div class="row">
+        <div class="col-md-10 mb-3 mb-md-0">
+            <form method="get" class="mb-4 d-flex justify-content-center">
+                <input type="text" name="q" placeholder="🔍 Search by username..." value="{{ query }}"
+                    class="form-control w-50 rounded-pill shadow-sm px-4 py-2 border-0"
+                    style="font-size: 1rem; background-color: #f7f9fc;">
+            </form>
+        </div>
+        
+        <div class="col-md-2 mb-3 mb-md-0">
+            <a href="{% url 'export_fund_summary_pdf' %}" class="btn btn-secondary btn-sm rounded-pill px-3 py-1 mx-2">
+                Print Summery PDF
+            </a>
+        </div>
+    </div>
+    
+    
+
+    {% if finances %}
+    <!-- Member fund list -->
+    <div class="list-group">
+        {% for finance in finances %}
+        <div class="list-group-item list-group-item-action shadow-lg mb-3 border rounded bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 text-dark fw-bold" style="font-size: 1.25rem;">{{ finance.user.username }}</h4>
+                <div class="d-flex align-items-center">
+                    <!-- Edit Button triggers modal -->
+                    <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 mx-2" 
+                            data-bs-toggle="modal" data-bs-target="#editFundModal{{ finance.id }}">
+                        Edit Funds
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="editFundModal{{ finance.id }}" tabindex="-1" aria-labelledby="editFundModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                        <form method="post" action="{% url 'edit_fund' finance.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="editFundModalLabel">Edit Funds for {{ finance.user.username }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Total Fund</label>
+                                <input type="number" name="total_fund" class="form-control" value="{{ finance.total_fund }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Total Income</label>
+                                <input type="number" name="total_income" class="form-control" value="{{ finance.total_income }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Total Expense</label>
+                                <input type="number" name="total_expense" class="form-control" value="{{ finance.total_expense }}">
+                            </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Save Changes</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+
+                    
+                    <a href="{% url 'download_single_user_report' finance.user.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1 mx-2">
+                    Print PDF
+                    </a>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <p><strong>Total Fund:</strong> <span class="text-primary">৳{{ finance.total_fund }}</span></p>
+                    <p><strong>Total Income:</strong> ৳{{ finance.total_income }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Total Expense:</strong> ৳{{ finance.total_expense }}</p>
+                    <p class="text-success"><strong>Net Profit:</strong> ৳{{ finance.net_profit }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-4 py-3" role="alert">
+            <strong>No members found.</strong>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+/* styles.css */
+
+
+body {
+    background-color: #f4f8fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+.navbar {
+    background-color: #022c43;
+}
+.navbar-brand, .nav-link {
+    color: #f4f8fb !important;
+    transition: 0.3s ease;
+}
+.nav-link:hover {
+    color: #ffd700 !important;
+}
+.btn-danger {
+    margin-left: 10px;
+}
+.footer {
+    margin-top: 60px;
+    padding: 20px;
+    background-color: #022c43;
+    color: #bbb;
+    text-align: center;
+    font-size: 0.9rem;
+}
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.investment {
+    width: 400px;
+}
+

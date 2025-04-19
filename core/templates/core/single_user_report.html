@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ finance.user.username }} - Fund Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 30px; }
+        h2 { color: #333; }
+        p { font-size: 16px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Fund Report for {{ finance.user.username }}</h2>
+    <p><strong>Total Fund:</strong> ৳{{ finance.total_fund }}</p>
+    <p><strong>Total Income:</strong> ৳{{ finance.total_income }}</p>
+    <p><strong>Total Expense:</strong> ৳{{ finance.total_expense }}</p>
+    <p><strong>Net Profit:</strong> ৳{{ finance.net_profit }}</p>
+</body>
+</html>
